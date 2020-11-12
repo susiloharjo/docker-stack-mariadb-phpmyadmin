@@ -1,0 +1,29 @@
+version: "3.7"
+
+services:
+
+  mariadb:
+    image: webhippie/mariadb:latest
+    # command: "mysqld --init-file /data/application/init.sql"
+    volumes:
+      - mariadb-data:/var/lib/mysql
+      #- ./init.sql:/data/application/init.sql
+    environment:
+      - MARIADB_ROOT_PASSWORD=root_password
+      - MARIADB_DATABASE=db
+      - MARIADB_USERNAME=db_username 
+      - MARIADB_PASSWORD=pass_db
+
+  phpmyadmin:
+    image: ebspace/armhf-phpmyadmin
+    ports:
+      - 8100:80
+    environment:
+      - PMA_ARBITRARY=1
+      - PMA_HOST=mariadb
+      - PMA_PASSWORD=root_password
+    depends_on:
+      - mariadb
+
+volumes:
+  mariadb-data:
